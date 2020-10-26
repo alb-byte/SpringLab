@@ -1,0 +1,174 @@
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+                   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+                        http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.4.xsd">
+
+
+    <changeSet id="1.0.1" author="albert.shymanel">
+        <createTable tableName="users">
+            <column name="id" type="INT" autoIncrement="true">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+
+            <column name="name" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+
+            <column name="email" type="VARCHAR(50)">
+                <constraints nullable="false" unique="true"/>
+            </column>
+
+            <column name="first_name" type="VARCHAR(50)">
+                <constraints nullable="false"/>
+            </column>
+
+            <column name="last_name" type="VARCHAR(50)">
+                <constraints nullable="false"/>
+            </column>
+
+            <column name="password" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+
+        </createTable>
+    </changeSet>
+
+    <changeSet id="1.0.2" author="albert.shymanel">
+        <createTable tableName="roles">
+            <column name="id" type="INT" autoIncrement="true">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+
+            <column name="name" type="VARCHAR(100)">
+                <constraints nullable="false" unique="true"/>
+            </column>
+
+        </createTable>
+    </changeSet>
+
+    <changeSet id="1.0.3" author="albert.shymanel">
+        <createTable tableName="user_roles">
+            <column name="user_id" type="INT">
+                <constraints  nullable="false"/>
+            </column>
+            <column name="role_id" type="INT">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+
+
+
+    <changeSet id="1.0.4" author="albert.shymanel">
+        <createTable tableName="computers">
+            <column name="id" type="INT" autoIncrement="true">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+
+            <column name="cpu_manufacturer" type="VARCHAR(25)" defaultValue="AMD">
+                <constraints nullable="false"/>
+            </column>
+            <column name="cpu_model" type="INT">
+                <constraints nullable="false"/>
+            </column>
+
+            <column name="gpu" type="VARCHAR(100)">
+                <constraints nullable="false"/>
+            </column>
+
+            <column name="ram_type" type="VARCHAR(25)" defaultValue="DDR4">
+                <constraints nullable="false"/>
+            </column>
+            <column name="ram_size" type="INT">
+                <constraints nullable="false"/>
+            </column>
+
+            <column name="drive_type" type="VARCHAR(25)" defaultValue="HDD">
+                <constraints nullable="false"/>
+            </column>
+            <column name="drive_size" type="INT">
+                <constraints nullable="false"/>
+            </column>
+
+            <column name="mother_board" type="VARCHAR(100)">
+                <constraints nullable="false"/>
+            </column>
+
+            <column name="is_free" type="BOOL" defaultValue="TRUE">
+                <constraints nullable="false"/>
+            </column>
+
+            <column name="price" type="INT">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+
+
+
+    <changeSet id="1.0.5" author="albert.shymanel">
+        <createTable tableName="contracts">
+            <column name="id" type="INT" autoIncrement="true">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="start_date" type="TIMESTAMP" defaultValue="CURRENT_TIMESTAMP()">
+                <constraints nullable="false"/>
+            </column>
+            <column name="end_date" type="TIMESTAMP" defaultValue="CURRENT_TIMESTAMP()">
+                <constraints nullable="false"/>
+            </column>
+            <column name="user_id" type="INT" >
+                <constraints nullable="false"/>
+            </column>
+            <column name="computer_id" type="INT" >
+                <constraints nullable="false"/>
+            </column>
+            <column name="is_active" type="BOOL" defaultValue="TRUE">
+                <constraints nullable="false"/>
+            </column>
+
+        </createTable>
+    </changeSet>
+
+    <changeSet id="1.0.6" author="albert.shymanel">
+        <addForeignKeyConstraint baseColumnNames="user_id"
+                                 baseTableName="user_roles"
+                                 constraintName="fk_user_roles_user"
+                                 onDelete="CASCADE"
+                                 onUpdate="RESTRICT"
+                                 referencedColumnNames="id"
+                                 referencedTableName="users"/>
+    </changeSet>
+
+    <changeSet id="1.0.7" author="albert.shymanel">
+        <addForeignKeyConstraint baseColumnNames="role_id"
+                                 baseTableName="user_roles"
+                                 constraintName="fk_user_roles_roles"
+                                 onDelete="CASCADE"
+                                 onUpdate="RESTRICT"
+                                 referencedColumnNames="id"
+                                 referencedTableName="roles"/>
+    </changeSet>
+
+    <changeSet id="1.0.8" author="albert.shymanel">
+        <addForeignKeyConstraint baseColumnNames="user_id"
+                                 baseTableName="contracts"
+                                 constraintName="fk_contracts_user_id"
+                                 onDelete="CASCADE"
+                                 onUpdate="RESTRICT"
+                                 referencedColumnNames="id"
+                                 referencedTableName="users"/>
+    </changeSet>
+
+    <changeSet id="1.0.9" author="albert.shymanel">
+        <addForeignKeyConstraint baseColumnNames="computer_id"
+                                 baseTableName="contracts"
+                                 constraintName="fk_contracts_computer_id"
+                                 onDelete="CASCADE"
+                                 onUpdate="RESTRICT"
+                                 referencedColumnNames="id"
+                                 referencedTableName="computers"/>
+    </changeSet>
+
+
+</databaseChangeLog>
