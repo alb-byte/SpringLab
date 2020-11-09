@@ -1,6 +1,7 @@
 package by.shymanel.springlab.security.jwt;
 
 
+import by.shymanel.springlab.model.User;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 
@@ -24,6 +25,7 @@ public final class JwtUserFactory {
                 mapToGrantedAuthorities(new ArrayList<>(user.getRoles())),
                 true
         );
+
     }
 
     private static List<GrantedAuthority> mapToGrantedAuthorities(List<Role> userRoles) {
