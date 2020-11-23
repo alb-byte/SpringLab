@@ -1,11 +1,12 @@
 package by.shymanel.springlab.dto;
 
 
+import by.shymanel.springlab.dto.validators.DateConstraint;
 import by.shymanel.springlab.model.Contract;
-import com.fasterxml.jackson.annotation.JsonBackReference;
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
-import javax.persistence.*;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
@@ -19,7 +20,9 @@ public class ContractDto {
     @Min(value = 0L, message = "Идентификатор не может быть отрицательным")
     private Long id;
     private boolean isActive;
+    @DateConstraint(message = "Некорректная дата")
     private Date startDate;
+    @DateConstraint(message = "Некорректная дата")
     private Date endDate;
     @Min(value = 0L, message = "Идентификатор не может быть отрицательным")
     private Long userId;

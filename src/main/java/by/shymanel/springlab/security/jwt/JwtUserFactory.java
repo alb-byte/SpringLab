@@ -1,6 +1,7 @@
 package by.shymanel.springlab.security.jwt;
 
 
+import by.shymanel.springlab.model.Role;
 import by.shymanel.springlab.model.User;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
