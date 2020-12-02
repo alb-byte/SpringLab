@@ -1,6 +1,5 @@
 package by.shymanel.springlab.config;
 
-
 import by.shymanel.springlab.security.jwt.JwtConfigurer;
 import by.shymanel.springlab.security.jwt.JwtTokenProvider;
 import org.springframework.beans.factory.annotation.Autowired;
