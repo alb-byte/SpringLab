@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <link rel="stylesheet" href="//stackpath.bootstrapcdn.com/bootstrap/4.1.0/css/bootstrap.min.css"
+          integrity="sha384-9gVQ4dYFwwWSjIDZnLEWnxCjeSWFphJiwGPXr1jddIhOegiu1FwO5qRGvFXOdJZ4"
+          crossorigin="anonymous">
+    <style>
+        body {
+            background-size: 100%;
+            background-image: url('https://upload.wikimedia.org/wikipedia/ru/thumb/b/b4/NEMIGA_class.jpg/1200px-NEMIGA_class.jpg');
+        }
+    </style>
+
+</head>
+<body>
+
+<div class="modal-dialog modal-login">
+    <div class="modal-content col-md-10">
+        <div class="modal-header justify-content-md-center">
+            <h4 class="modal-title">Регистрация</h4>
+        </div>
+        <div class="modal-body">
+
+            <form id="regForm" disabled="disabled">
+                <div class="form-group">
+                    <i class="fa fa-user"></i>
+                    <input
+                            type="text"
+                            class="form-control"
+                            placeholder="Username"
+                            required="required"
+                            id="username"
+                    />
+                </div>
+                <div class="form-group">
+                    <i class="fa fa-user"></i>
+                    <input
+                            type="text"
+                            class="form-control"
+                            placeholder="First name"
+                            required="required"
+                            id="fname"
+
+                    />
+                </div>
+                <div class="form-group">
+                    <i class="fa fa-user"></i>
+                    <input
+                            type="text"
+                            class="form-control"
+                            placeholder="Last name"
+                            required="required"
+                            id="lname"
+
+                    />
+                </div>
+                <div class="form-group">
+                    <i class="fa fa-user"></i>
+                    <input
+                            type="email"
+                            class="form-control"
+                            placeholder="Email"
+                            required="required"
+                            id="email"
+
+                    />
+                </div>
+                <div class="form-group">
+                    <i class="fa fa-lock"></i>
+                    <input
+                            type="password"
+                            class="form-control"
+                            placeholder="Password"
+                            required="required"
+                            id="password"
+
+                    />
+                </div>
+
+                <div class="form-group">
+                    <input
+                            type="submit"
+                            class="btn btn-primary btn-block btn-lg"
+                            value="Registration"
+                    />
+                </div>
+            </form>
+
+        </div>
+    </div>
+</div>
+
+<script src="https://code.jquery.com/jquery-3.5.1.js" integrity="sha256-QWo7LDvxbWT2tbbQ97B53yJnYU3WhH/C8ycbRAkjPDc="
+        crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"
+        integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1"
+        crossorigin="anonymous"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"
+        integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM"
+        crossorigin="anonymous"></script>
+
+<script >
+    $("#regForm").submit(function (event) {
+        let username = document.getElementById("username").value;
+        let fname = document.getElementById("fname").value;
+        let lname = document.getElementById("lname").value;
+        let email = document.getElementById("email").value;
+
+        let password = document.getElementById("password").value;
+        let input = {
+            "username": username,
+            "firstName": fname,
+            "lastName": lname,
+            "email": email,
+            "password": password,
+        }
+        console.log(input);
+        console.log("===============");
+
+
+
+        fetch("http://localhost:8080/api/auth/registration", {
+            method: 'POST',
+            body: JSON.stringify(input),
+            headers: {
+                'Content-Type': 'application/json'
+            }
+        }).then((response) => {return response.json()
+        }).then((data) => {
+            if (data.token === undefined){
+                $("#passwordError").html(data.message);
+                $("#passwordError").removeAttr("hidden");
+                $("#passwordError").attr("visible");
+
+            }
+            else
+            {
+                console.log("sdsdsd");
+                //document.cookie = "token="+ data.token+";";
+                //document.cookie = "username="+ data.username+";";
+                //location.href = '/profile'
+            }
+        }).catch((err) => {
+            console.log("error");
+            console.log(err);
+        })
+
+        event.preventDefault();
+    });
+</script>
+
+</body>
+</html>

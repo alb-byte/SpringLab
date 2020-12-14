@@ -1,0 +1,315 @@
+<div>
+    <div class="container">
+        <div class="row">
+            <div class="col-4 computers bg-secondary">
+            </div>
+            <div class="col-4 add ">
+                <div class="form-group">
+                    <button
+                            onclick="logout()"
+                            class="btn btn-primary btn-block btn-lg"
+                    >Выйти</button>
+                </div>
+
+                <form disabled="disabled">
+                    <div class="form-group">
+                        <i class="fa fa-user"></i>
+                        <input
+                                type="number"
+                                class="form-control"
+                                placeholder="Id"
+                                required="required"
+                                id="cid"
+                        />
+                    </div>
+                    <div class="form-group">
+                        <i class="fa fa-user"></i>
+                        <select
+                                class="custom-select"
+                                id="cm"
+                        >
+                            <option selected disabled>
+                                CPU
+                            </option>
+                            <option value="INTEL">INTEL</option>
+                            <option value="AMD">AMD</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <i class="fa fa-user"></i>
+                        <input
+                                type="text"
+                                class="form-control"
+                                placeholder="Model"
+                                required="required"
+                                id="cmod"
+                        />
+                    </div>
+                    <div class="form-group">
+                        <i class="fa fa-user"></i>
+                        <input
+                                type="text"
+                                class="form-control"
+                                placeholder="GPU"
+                                required="required"
+                                id="gpu"
+
+                        />
+                    </div>
+                    <div class="form-group">
+                        <i class="fa fa-user"></i>
+                        <select
+                                class="custom-select"
+                                id="rt"
+                        >
+                            <option selected disabled>
+                                RAM Type
+                            </option>
+                            <option value="DDR3">DDR3</option>
+                            <option value="DDR4">DDR4</option>
+                            <option value="DDR5">DDR5</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <i class="fa fa-lock"></i>
+                        <input
+                                type="nubmer"
+                                class="form-control"
+                                placeholder="RAM Size"
+                                id="rs"
+                        />
+                    </div>
+                    <div class="form-group">
+                        <i class="fa fa-user"></i>
+                        <select
+                                class="custom-select"
+                                id="dt"
+                        >
+                            <option selected disabled>
+                                Drive Type
+                            </option>
+                            <option value="HDD">HDD</option>
+                            <option value="SSD">SSD</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <i class="fa fa-lock"></i>
+                        <input
+                                type="nubmer"
+                                class="form-control"
+                                placeholder="Drive Size"
+                                id="ds"
+                        />
+                    </div>
+                    <div class="form-group">
+                        <i class="fa fa-lock"></i>
+                        <input
+                                type="text"
+                                class="form-control"
+                                placeholder="MotherBoard"
+                                id="moth"
+                        />
+                    </div>
+                    <div class="form-group">
+                        <i class="fa fa-user"></i>
+                        <select
+                                class="custom-select"
+                                id="free"
+                        >
+                            <option selected disabled>
+                                Free
+                            </option>
+                            <option value="true">True</option>
+                            <option value="false">False</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <i class="fa fa-lock"></i>
+                        <input
+                                type="nubmer"
+                                class="form-control"
+                                placeholder="Price"
+                                id="price"
+                        />
+                    </div>
+
+                </form>
+                <div className="form-group">
+                    <button
+                            onclick="addComputer()"
+                            className="btn btn-primary btn-block btn-lg"
+                    >Добавить
+                    </button>
+                    <button
+                            onclick="updateComputer()"
+                            className="btn btn-primary btn-block btn-lg"
+                    >Обновить
+                    </button>
+                </div>
+            </div>
+            <div class="col-4 contracts bg-secondary">
+                <h3>Все контракты</h3>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function printComputers(comps) {
+            comps.map(c =>
+                $(".computers")
+                    .append(`
+                 <div>
+                <h3>Компьютер ${c.id}</h3>
+                <ul>
+                <li> CPU
+                    <ul>
+                     <li>${c.cpuManufacturer}</li>
+                     <li>${c.cpuModel}</li>
+                    </ul>
+                </li>
+                <li> RAM
+                    <ul>
+                    <li>${c.ramSize}</li>
+                    <li>${c.ramType}</li>
+                    </ul>
+                </li>
+                <li> DRIVE
+                    <ul>
+                    <li>${c.driveSize}</li>
+                    <li>${c.driveType}</li>
+                    </ul>
+                </li>
+                    <li>GPU ${c.gpu}</li>
+                    <li>MOTHER ${c.motherBoard}</li>
+                    <li onclick=>${c.free ? "FREE" : "BOOKED"}</li>
+                    <li>PRICE ${c.price}</li>
+                </ul>
+            </div>
+                `));
+        }
+
+        function clearComputers() {
+            $(".computers").empty();
+        }
+
+
+        function printContracts (contracts){
+            contracts.map(c =>
+                $(".contracts")
+                    .append(`
+                 <div>
+                <h3>Контракт ${c.id}</h3>
+                <ul>
+                    <li>START DATE ${c.startDate}</li>
+                    <li>END DATE ${c.endDate}</li>
+                </ul>
+            </div>
+                `));
+        }
+
+        function clearComputers(){
+            $(".computers").empty();
+        }
+
+        $.ajax({
+            url: "http://localhost:8080/api/contracts",
+            type: "GET",
+            headers: {"Authorization": "Bearer_" + cookie.token, 'Content-Type': 'application/json'}
+        })
+            .then((contracts) => {
+                console.log(contracts);
+                printContracts(contracts);
+            });
+
+        $.ajax({
+            url: "http://localhost:8080/api/computers",
+            type: "GET",
+            headers: {"Authorization": "Bearer_" + cookie.token, 'Content-Type': 'application/json'}
+        })
+            .then((comps) => {
+                console.log(comps);
+                printComputers(comps);
+            });
+
+        function addComputer() {
+
+            let computer = {
+                cpuManufacturer: document.getElementById("cm").value,
+                cpuModel: document.getElementById("cmod").value,
+                gpu: document.getElementById("gpu").value,
+                ramType: document.getElementById("rt").value,
+                ramSize: document.getElementById("rs").value,
+                driveType: document.getElementById("dt").value,
+                driveSize: document.getElementById("ds").value,
+                motherBoard: document.getElementById("moth").value,
+                free: document.getElementById("free").value,
+                price: document.getElementById("price").value
+            }
+            console.log(computer);
+            fetch("http://localhost:8080/api/admin/computers", {
+                method: 'POST',
+                body: JSON.stringify(computer),
+                headers: {
+                    'Authorization': 'Bearer_' + cookie.token,
+                    'Content-Type': 'application/json'
+                }
+            }).then(data => {
+                    alert("Компьютер добавлен");
+                    console.log(data);
+                    clearComputers();
+                    $.ajax({
+                        url: "http://localhost:8080/api/computers",
+                        type: "GET",
+                        headers: {"Authorization": "Bearer_" + cookie.token, 'Content-Type': 'application/json'}
+                    })
+                        .then((comps) => {
+                            console.log(comps);
+                            printComputers(comps);
+                        });
+
+                }
+            ).catch(e => console.log(e));
+        }
+
+        function updateComputer() {
+
+            let computer = {
+                id: document.getElementById("cid").value,
+                cpuManufacturer: document.getElementById("cm").value,
+                cpuModel: document.getElementById("cmod").value,
+                gpu: document.getElementById("gpu").value,
+                ramType: document.getElementById("rt").value,
+                ramSize: document.getElementById("rs").value,
+                driveType: document.getElementById("dt").value,
+                driveSize: document.getElementById("ds").value,
+                motherBoard: document.getElementById("moth").value,
+                free: document.getElementById("free").value,
+                price: document.getElementById("price").value
+            }
+            console.log(computer);
+            fetch("http://localhost:8080/api/admin/computers", {
+                method: 'PUT',
+                body: JSON.stringify(computer),
+                headers: {
+                    'Authorization': 'Bearer_' + cookie.token,
+                    'Content-Type': 'application/json'
+                }
+            }).then(data => {
+                    alert("Компьютер добавлен");
+                    console.log(data);
+                    clearComputers();
+                    $.ajax({
+                        url: "http://localhost:8080/api/computers",
+                        type: "GET",
+                        headers: {"Authorization": "Bearer_" + cookie.token, 'Content-Type': 'application/json'}
+                    })
+                        .then((comps) => {
+                            console.log(comps);
+                            printComputers(comps);
+                        });
+                }
+            ).catch(e => console.log(e));
+        }
+    </script>
+</div>

@@ -1,0 +1,213 @@
+<div>
+    <div class="container">
+        <div class="row">
+            <div class="col-4 computers bg-secondary ">
+            </div>
+            <div class="col-4 filter ">
+                <div class="form-group">
+                    <button
+                            onclick="logout()"
+                            class="btn btn-primary btn-block btn-lg"
+                    >Выйти</button>
+                </div>
+
+                <form id="filterForm" disabled="disabled">
+                    <div class="form-group">
+                        <i class="fa fa-user"></i>
+                        <select class="custom-select"
+                                onChange="changeFree(this.options[this.selectedIndex].value)">
+                            <option selected disabled>Доступен</option>
+                            <option value="true">Доступен</option>
+                            <option value="false">Занят</option>
+                        </select>
+                    </div>
+                    <div className="form-group">
+                        <i className="fa fa-user"></i>
+                        <select class="custom-select"
+                                onChange="changeDrive(this.options[this.selectedIndex].value)">
+                            <option selected disabled>Тип Диска</option>
+                            <option value="HDD">HDD</option>
+                            <option value="SSD">SSD</option>
+                        </select>
+                    </div>
+                    <div className="form-group">
+                        <i className="fa fa-user"></i>
+                        <select class="custom-select"
+                                onChange="changeCpu(this.options[this.selectedIndex].value)">
+                            <option selected disabled>Процессор</option>
+                            <option value="INTEL">INTEL</option>
+                            <option value="AMD">AMD</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <i class="fa fa-lock"></i>
+                        <input
+                                type="nubmer"
+                                className="form-control"
+                                placeholder="Id"
+                                id="bron"
+                        />
+                    </div>
+                </form>
+
+                <div class="form-group">
+                    <button
+                            onclick="addContract()"
+                            class="btn btn-primary btn-block btn-lg"
+                    >Забронировать</button>
+                </div>
+            </div>
+            <div class="col-4 contracts bg-secondary">
+                <h3>Ваши контракты</h3>
+            </div>
+            </div>
+    </div>
+
+    <script>
+        function printComputers (comps){
+            comps.map(c =>
+                $(".computers")
+                    .append(`
+                 <div>
+                <h3>Компьютер ${c.id}</h3>
+                <ul>
+                <li> CPU
+                    <ul>
+                     <li>${c.cpuManufacturer}</li>
+                     <li>${c.cpuModel}</li>
+                    </ul>
+                </li>
+                <li> RAM
+                    <ul>
+                    <li>${c.ramSize}</li>
+                    <li>${c.ramType}</li>
+                    </ul>
+                </li>
+                <li> DRIVE
+                    <ul>
+                    <li>${c.driveSize}</li>
+                    <li>${c.driveType}</li>
+                    </ul>
+                </li>
+                    <li>GPU ${c.gpu}</li>
+                    <li>MOTHER ${c.motherBoard}</li>
+                    <li onclick=>${c.free ? "FREE" : "BOOKED"}</li>
+                    <li>PRICE ${c.price}</li>
+                </ul>
+            </div>
+                `));
+        }
+
+        function printContracts (contracts){
+            contracts.map(c =>
+                $(".contracts")
+                    .append(`
+                 <div>
+                <h3>Контракт ${c.id}</h3>
+                <ul>
+                    <li>START DATE ${c.startDate}</li>
+                    <li>END DATE ${c.endDate}</li>
+                </ul>
+            </div>
+                `));
+        }
+
+        function clearComputers(){
+            $(".computers").empty();
+        }
+        function clearContracts(){
+            $(".contracts").empty();
+        }
+
+        $.ajax({
+            url: "http://localhost:8080/api/computers",
+            type: "GET",
+            headers: {"Authorization": "Bearer_" + cookie.token, 'Content-Type': 'application/json'}
+        })
+            .then((comps) => {
+                console.log(comps);
+                printComputers(comps);
+            });
+
+        $.ajax({
+            url: "http://localhost:8080/api/contracts?username="+cookie.username,
+            type: "GET",
+            headers: {"Authorization": "Bearer_" + cookie.token, 'Content-Type': 'application/json'}
+        })
+            .then((contracts) => {
+                console.log(contracts);
+                printContracts(contracts);
+            });
+
+
+        function changeCpu(val) {
+            $.ajax({
+                url: "http://localhost:8080/api/computers?cpu="+val,
+                type: "GET",
+                headers: {"Authorization": "Bearer_" + cookie.token, 'Content-Type': 'application/json'}
+            })
+                .then((comps) => {
+                    console.log(comps);
+                    clearComputers();
+                    printComputers(comps);
+                });
+        }
+        function changeFree(val) {
+            $.ajax({
+                url: "http://localhost:8080/api/computers?free="+val,
+                type: "GET",
+                headers: {"Authorization": "Bearer_" + cookie.token, 'Content-Type': 'application/json'}
+            })
+                .then((comps) => {
+                    console.log(comps);
+                    clearComputers();
+                    printComputers(comps);
+                });
+        }
+
+        function changeDrive(val) {
+            $.ajax({
+                url: "http://localhost:8080/api/computers?driveType="+val,
+                type: "GET",
+                headers: {"Authorization": "Bearer_" + cookie.token, 'Content-Type': 'application/json'}
+            })
+                .then((comps) => {
+                    console.log(comps);
+                    clearComputers();
+                    printComputers(comps);
+                });
+        }
+
+        function addContract(){
+            let id = document.getElementById("bron").value;
+
+            let input = {computerId:parseInt(id),username: cookie.username}
+            console.log(input);
+            alert(input.computerId);
+            fetch("http://localhost:8080/api/contracts", {
+                method: 'POST',
+                body: JSON.stringify(input),
+                headers: {
+                    'Authorization': 'Bearer_' + cookie.token,
+                    'Content-Type': 'application/json'
+                }
+            }).then(data => {
+                console.log(data);
+                    $.ajax({
+                        url: "http://localhost:8080/api/contracts?username="+cookie.username,
+                        type: "GET",
+                        headers: {"Authorization": "Bearer_" + cookie.token, 'Content-Type': 'application/json'}
+                    })
+                        .then((contracts) => {
+                            console.log(contracts);
+                            clearContracts();
+                            printContracts(contracts);
+                        });
+            }
+            ).catch(e=> console.log(e));
+        }
+
+
+    </script>
+</div>
+

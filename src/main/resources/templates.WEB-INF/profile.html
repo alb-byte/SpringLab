@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <link rel="stylesheet" href="//stackpath.bootstrapcdn.com/bootstrap/4.1.0/css/bootstrap.min.css"
+          integrity="sha384-9gVQ4dYFwwWSjIDZnLEWnxCjeSWFphJiwGPXr1jddIhOegiu1FwO5qRGvFXOdJZ4"
+          crossorigin="anonymous">
+    <style>
+        body {
+            background-size: 100%;
+            background-image: url('https://upload.wikimedia.org/wikipedia/ru/thumb/b/b4/NEMIGA_class.jpg/1200px-NEMIGA_class.jpg');
+        }
+    </style>
+</head>
+<body>
+<div id="mainContainer">
+
+</div>
+
+<script src="https://code.jquery.com/jquery-3.5.1.js" integrity="sha256-QWo7LDvxbWT2tbbQ97B53yJnYU3WhH/C8ycbRAkjPDc="
+        crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"
+        integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1"
+        crossorigin="anonymous"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"
+        integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM"
+        crossorigin="anonymous"></script>
+
+<script>
+    let cookie = document.cookie.split(';').reduce((cookieObject, cookieString) => {
+        let splitCookie = cookieString.split('=')
+        try {
+            cookieObject[splitCookie[0].trim()] = decodeURIComponent(splitCookie[1])
+        } catch (error) {
+            cookieObject[splitCookie[0].trim()] = splitCookie[1]
+        }
+        return cookieObject
+    }, [])
+
+    if(cookie.username == "-1")
+        window.location.href = "/";
+
+    if(cookie.username == "root"){
+        $.ajax({
+            url: "http://localhost:8080/admin",
+            type: "GET",
+            headers: {"Authorization": "Bearer_"+cookie.token},
+            success: function (data) {
+                $("#mainContainer").append(data);
+            }
+        });
+    }
+    else{
+        $.ajax({
+            url: "http://localhost:8080/user",
+            type: "GET",
+            headers: {"Authorization": "Bearer_"+cookie.token},
+            success: function (data) {
+                $("#mainContainer").append(data);
+            }
+        });
+    }
+
+    function logout (){
+        document.cookie="token=-1";
+        document.cookie="username=-1";
+        window.location.href = "/";
+    }
+</script>
+</body>
+</html>
